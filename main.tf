@@ -1,12 +1,12 @@
 provider "aws" {
-  region = "us-east-1"
-  profile = "terraform-admin"
+  region  = var.aws_region
+  profile = var.aws_profile
 }
 
 # Create VPC
 resource "aws_vpc" "windows_ec2_vpc" {
-  cidr_block = "10.0.0.0/16"
-  enable_dns_support = true
+  cidr_block           = var.vpc_cidr
+  enable_dns_support   = true
   enable_dns_hostnames = true
 
   tags = {
@@ -16,8 +16,8 @@ resource "aws_vpc" "windows_ec2_vpc" {
 
 # Create Subnet
 resource "aws_subnet" "windows_ec2_subnet" {
-  vpc_id     = aws_vpc.windows_ec2_vpc.id
-  cidr_block = "10.0.1.0/24"
+  vpc_id                  = aws_vpc.windows_ec2_vpc.id
+  cidr_block              = var.subnet_cidr
   map_public_ip_on_launch = true
 
   tags = {
@@ -64,7 +64,7 @@ resource "aws_security_group" "rdp_sg" {
     from_port   = 3389
     to_port     = 3389
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  # Allow RDP from anywhere; adjust as needed
+    cidr_blocks = var.rdp_cidr_blocks  # Allow RDP from specified CIDR blocks
   }
 
   egress {
@@ -81,17 +81,17 @@ resource "aws_security_group" "rdp_sg" {
 
 # Generate SSH Key Pair
 resource "aws_key_pair" "windows_ec2_key" {
-  key_name   = "windows_ec2_key"
-  public_key = file("~/.ssh/windows_ec2_key.pub")
+  key_name   = var.key_name
+  public_key = file(var.public_key_path)
 }
 
 # Create Windows EC2 Instance
 resource "aws_instance" "windows_ec2_instance" {
-  ami                    = "ami-037bb856a23a2f822"  # Replace with the AMI ID for Windows_Server-2025-English-Full-Base-2024.11.04
-  instance_type          = "c7i.4xlarge"
-  key_name               = aws_key_pair.windows_ec2_key.key_name
-  vpc_security_group_ids = [aws_security_group.rdp_sg.id]
-  subnet_id              = aws_subnet.windows_ec2_subnet.id
+  ami                         = var.ami_id
+  instance_type               = var.instance_type
+  key_name                    = aws_key_pair.windows_ec2_key.key_name
+  vpc_security_group_ids      = [aws_security_group.rdp_sg.id]
+  subnet_id                   = aws_subnet.windows_ec2_subnet.id
   associate_public_ip_address = true
 
   tags = {
