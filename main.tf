@@ -94,6 +94,8 @@ resource "aws_instance" "windows_ec2_instance" {
   subnet_id                   = aws_subnet.windows_ec2_subnet.id
   associate_public_ip_address = true
 
+  user_data = file("bootstrap.ps1")
+
   tags = {
     Name = "Windows_Server_2025_Instance"
   }
