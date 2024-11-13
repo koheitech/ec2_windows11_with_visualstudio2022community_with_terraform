@@ -18,6 +18,7 @@ resource "aws_vpc" "windows_ec2_vpc" {
 resource "aws_subnet" "windows_ec2_subnet" {
   vpc_id                  = aws_vpc.windows_ec2_vpc.id
   cidr_block              = var.subnet_cidr
+  availability_zone       = "us-east-1a"
   map_public_ip_on_launch = true
 
   tags = {
@@ -93,6 +94,7 @@ resource "aws_instance" "windows_ec2_instance" {
   vpc_security_group_ids      = [aws_security_group.rdp_sg.id]
   subnet_id                   = aws_subnet.windows_ec2_subnet.id
   associate_public_ip_address = true
+  availability_zone           = "us-east-1a"
 
   user_data = file("bootstrap.ps1")
 
