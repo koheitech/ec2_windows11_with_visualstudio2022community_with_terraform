@@ -1,8 +1,3 @@
-provider "aws" {
-  region  = var.aws_region
-  profile = var.aws_profile
-}
-
 # Create VPC
 resource "aws_vpc" "windows_ec2_vpc" {
   cidr_block           = var.vpc_cidr
