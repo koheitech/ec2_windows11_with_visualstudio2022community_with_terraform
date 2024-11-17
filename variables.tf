@@ -49,3 +49,9 @@ variable "instance_type" {
   type        = string
   default     = "t2.micro"
 }
+
+variable "volume_size" {
+  description = "The size of the default volume in GB"
+  type        = number
+  default     = 256
+}

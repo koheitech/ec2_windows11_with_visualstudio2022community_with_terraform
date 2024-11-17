@@ -1,3 +1,6 @@
+###### This is tempalte file for terraform.tfvars ######
+# TODO: fill out neccessary config for each environment variables, and remove `.example` extenstion from the file.
+
 # AWS region to deploy resources in
 aws_region = ""
 
@@ -24,3 +27,6 @@ ami_id = ""
 
 # Instance type for the Windows Server instance
 instance_type = ""
+
+# Size of the EBS volume in GB
+ebs_volume_size = ""

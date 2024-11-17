@@ -91,6 +91,10 @@ resource "aws_instance" "windows_ec2_instance" {
   associate_public_ip_address = true
   availability_zone           = "us-east-1a"
 
+  root_block_device {
+    volume_size = var.volume_size
+  }
+
   user_data = file("bootstrap.ps1")
 
   tags = {
